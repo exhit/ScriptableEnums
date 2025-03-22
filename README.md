@@ -157,4 +157,4 @@ Contributions are welcome! Please open an issue or submit a pull request for any
 ## Support
 If you encounter any issues or have questions, please open an issue on the GitHub repository.
 
-Note: This package is designed for Unity 2020.3 LTS or later. Ensure your project meets the minimum requirements.
+Note: This package is designed for Unity 2023.2 LTS or later. Ensure your project meets the minimum requirements.
