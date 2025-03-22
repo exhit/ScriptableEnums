@@ -1,6 +1,6 @@
 # ScriptableEnum
 
-`ScriptableEnum` is a Unity package that provides a flexible and extensible way to create and manage enumerations as ScriptableObjects. This allows for dynamic and customizable enums that can be easily modified and extended without requiring code changes.
+`ScriptableEnums` is a Unity package that provides a flexible and extensible way to create and manage enumerations as ScriptableObjects. This allows for dynamic and customizable enums that can be easily modified and extended without requiring code changes.
 
 ## Features
 
@@ -34,7 +34,8 @@ public class ColorEnum : ScriptableEnum<ColorEnum>
     // Custom properties or methods can be added here
 }
 ```
-Using ScriptableEnum in Code
+### Using ScriptableEnum in Code
+
 ```csharp
 public class Example : MonoBehaviour
 {
@@ -53,11 +54,11 @@ public class Example : MonoBehaviour
     }
 }
 ```
-Using [ScriptableEnum] Attribute
-You can use the [ScriptableEnum] attribute to directly reference a ScriptableEnum in your MonoBehaviour or ScriptableObject.
+### Using [ScriptableEnumAttribute] Attribute
 
-csharp
-Copy
+You can use the [ScriptableEnumAttribute] attribute to directly reference a ScriptableEnum in your MonoBehaviour or ScriptableObject.
+
+```csharp
 public class PlayerSettings : MonoBehaviour
 {
     [ScriptableEnum]
@@ -68,9 +69,12 @@ public class PlayerSettings : MonoBehaviour
         Debug.Log($"Player color: {playerColor.DisplayText}");
     }
 }
-Example: Using ScriptableEnum with a ScriptableObject
-csharp
-Copy
+```
+
+
+### Example: Using ScriptableEnum with a ScriptableObject
+
+```csharp
 using UnityEngine;
 using Tauntastic.ScriptableEnums;
 
@@ -85,8 +89,11 @@ public class ColorSettings : ScriptableObject
         Debug.Log($"Selected color: {ColorSO.DisplayText}");
     }
 }
-API Reference
-ScriptableEnum
+```
+
+## API Reference
+
+### ScriptableEnum
 DisplayText: Gets or sets the display text for the enum value.
 
 GetAllOptions<T>(): Returns all instances of a specific ScriptableEnum type.
