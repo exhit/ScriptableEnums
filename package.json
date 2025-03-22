@@ -1,11 +1,11 @@
 {
   "name": "com.tauntastic.scriptableenums",
   "version": "1.0.1",
-  "displayName": "ScriptableEnums",
+  "displayName": "Taunting.ScriptableEnums",
   "description": "An utility that simplifies scriptable objects use",
   "unity": "2023.2",
   "author": {
-    "name": "Tauntastic",
+    "name": "Taunting",
     "email": "tauntastic.unitydeveloper@gmail.com"
   },
   "license": "MIT",
