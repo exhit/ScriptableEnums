@@ -28,8 +28,8 @@
 using UnityEngine;
 using Tauntastic.ScriptableEnums;
 
-[CreateAssetMenu(fileName = "NewColorEnum", menuName = "Enums/ColorEnum")]
-public class ColorEnum : ScriptableEnum<ColorEnum>
+[CreateAssetMenu(menuName = "Enums/ColorEnum")]
+public class ColorEnum : ScriptableEnum
 {
     // Custom properties or methods can be added here
 }
@@ -94,23 +94,18 @@ public class ColorSettings : ScriptableObject
 ## API Reference
 
 ### ScriptableEnum
-#### DisplayText: Gets or sets the display text for the enum value.
+- **string DisplayText { get; }:** Gets or sets the display text for the enum value.
 
-#### GetAllOptions<T>(): Returns all instances of a specific ScriptableEnum type.
+- **GetAll\<T>():** Returns all instances of a specific ScriptableEnum type.
 
-#### GetAllOptions(Type type): Returns all instances of a specific ScriptableEnum type by Type.
+- **GetAll(Type type):** Returns all instances of a specific ScriptableEnum type by Type.
 
-### ScriptableEnum<T>
-#### AllOptions: Returns all instances of the specific ScriptableEnum<T> type.
+- **GetByName\<T>(string textIdentifier):** Retrieves an enum instance by its display name.
 
-#### GetByName(string textIdentifier): Retrieves an enum instance by its display name.
-
-#### GetAllInstances(): Returns all instances of the specific ScriptableEnum<T> type.
+- **GetByName(Type type, string textIdentifier):** Retrieves an enum instance by its display name.
 
 ### Attributes
-#### ScriptableEnumAttribute: Marks a field or property as a ScriptableEnum.
-
-#### DisableAttribute: Disables a field or property in the Inspector.
+- **ScriptableEnumAttribute:** Marks a ScriptableObject field or property to be drawn as ScriptableEnum.
 
 ## Examples
 ### Example 1: Creating a Color Enum
