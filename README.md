@@ -34,7 +34,7 @@ public class ColorEnum : ScriptableEnum<ColorEnum>
     // Custom properties or methods can be added here
 }
 ```
-### Using ScriptableEnum in Code
+### Using ScriptableEnum<T> class
 
 ```csharp
 public class Example : MonoBehaviour
@@ -94,36 +94,36 @@ public class ColorSettings : ScriptableObject
 ## API Reference
 
 ### ScriptableEnum
-DisplayText: Gets or sets the display text for the enum value.
+#### DisplayText: Gets or sets the display text for the enum value.
 
-GetAllOptions<T>(): Returns all instances of a specific ScriptableEnum type.
+#### GetAllOptions<T>(): Returns all instances of a specific ScriptableEnum type.
 
-GetAllOptions(Type type): Returns all instances of a specific ScriptableEnum type by Type.
+#### GetAllOptions(Type type): Returns all instances of a specific ScriptableEnum type by Type.
 
-ScriptableEnum<T>
-AllOptions: Returns all instances of the specific ScriptableEnum<T> type.
+### ScriptableEnum<T>
+#### AllOptions: Returns all instances of the specific ScriptableEnum<T> type.
 
-GetByName(string textIdentifier): Retrieves an enum instance by its display name.
+#### GetByName(string textIdentifier): Retrieves an enum instance by its display name.
 
-GetAllInstances(): Returns all instances of the specific ScriptableEnum<T> type.
+#### GetAllInstances(): Returns all instances of the specific ScriptableEnum<T> type.
 
-Attributes
-ScriptableEnumAttribute: Marks a field or property as a ScriptableEnum.
+### Attributes
+#### ScriptableEnumAttribute: Marks a field or property as a ScriptableEnum.
 
-DisableAttribute: Disables a field or property in the Inspector.
+#### DisableAttribute: Disables a field or property in the Inspector.
 
-Examples
-Example 1: Creating a Color Enum
-csharp
-Copy
+## Examples
+### Example 1: Creating a Color Enum
+```csharp
 [CreateAssetMenu(fileName = "NewColorEnum", menuName = "Enums/ColorEnum")]
 public class ColorEnum : ScriptableEnum<ColorEnum>
 {
     // Custom properties or methods can be added here
 }
-Example 2: Using ScriptableEnum in a MonoBehaviour
-csharp
-Copy
+```
+
+### Example 2: Using ScriptableEnum in a MonoBehaviour
+```csharp
 public class Player : MonoBehaviour
 {
     public ColorEnum playerColor;
@@ -133,9 +133,9 @@ public class Player : MonoBehaviour
         Debug.Log($"Player color: {playerColor.DisplayText}");
     }
 }
-Example 3: Using [ScriptableEnum] with a ScriptableObject
-csharp
-Copy
+```
+### Example 3: Using [ScriptableEnum] with a ScriptableObject
+```csharp
 [CreateAssetMenu(fileName = "NewColorSettings", menuName = "Settings/ColorSettings")]
 public class ColorSettings : ScriptableObject
 {
@@ -147,13 +147,14 @@ public class ColorSettings : ScriptableObject
         Debug.Log($"Selected color: {ColorSO.DisplayText}");
     }
 }
-License
+```
+## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-Contributing
+## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any bugs, features, or improvements.
 
-Support
+## Support
 If you encounter any issues or have questions, please open an issue on the GitHub repository.
 
 Note: This package is designed for Unity 2020.3 LTS or later. Ensure your project meets the minimum requirements.
