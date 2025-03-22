@@ -33,10 +33,9 @@ public class ColorEnum : ScriptableEnum<ColorEnum>
 {
     // Custom properties or methods can be added here
 }
-
+```
 Using ScriptableEnum in Code
-csharp
-Copy
+```csharp
 public class Example : MonoBehaviour
 {
     public ColorEnum color;
@@ -53,6 +52,7 @@ public class Example : MonoBehaviour
         Debug.Log($"Selected color: {color.DisplayText}");
     }
 }
+```
 Using [ScriptableEnum] Attribute
 You can use the [ScriptableEnum] attribute to directly reference a ScriptableEnum in your MonoBehaviour or ScriptableObject.
 
