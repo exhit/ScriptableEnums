@@ -489,7 +489,6 @@ namespace Tauntastic.ScriptableEnums
 #endif
     
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    [Preserve]
     public class DisableAttribute : PropertyAttribute
     {
     }
