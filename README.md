@@ -1,4 +1,4 @@
-# ScriptableEnum
+# Tauntastic.ScriptableEnum
 
 `ScriptableEnums` is a Unity package that provides a flexible and extensible way to create and manage enumerations as ScriptableObjects. This allows for dynamic and customizable enums that can be easily modified and extended without requiring code changes.
 
