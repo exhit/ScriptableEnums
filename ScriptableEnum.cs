@@ -93,16 +93,7 @@ namespace Tauntastic
         
         public static T GetByName<T>(string textIdentifier)  where T : ScriptableEnum
         {
-            textIdentifier = textIdentifier.Trim().ToLower();
-            var allScriptableEnums = GetAll<T>();
-            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier).ToArray();
-
-            return matchingEnums.Length switch
-            {
-                0 => throw new Exception($"No scriptable enum found for {textIdentifier}"),
-                > 1 => throw new Exception($"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
-                _ => matchingEnums.FirstOrDefault()
-            };
+            return GetByName(typeof(T), textIdentifier) as T;
         }
 
         public static ScriptableEnum GetByName(Type type, string textIdentifier)

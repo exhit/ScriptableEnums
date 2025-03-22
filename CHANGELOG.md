@@ -4,3 +4,4 @@
 
 - Added Change Log
 - Removed `ScriptableEnum<T>` class
+- Unified `GetByName()`logic
