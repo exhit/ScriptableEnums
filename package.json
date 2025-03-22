@@ -20,6 +20,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/exhit/com.tauntastic.scriptableenums.git"
-  },
-  "changelog": "### 1.0.1 (2025-03-22)\n- Removed ScriptableEnum<T>"
+  }
 }
