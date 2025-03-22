@@ -18,7 +18,7 @@ namespace Tauntastic
     abstract public class ScriptableEnum : ScriptableObject
     {
         [SerializeField]
-        [Disable]
+        [ScriptableEnumsDisableAttribute]
         private string _displayText;
 
         public string DisplayText
@@ -26,8 +26,6 @@ namespace Tauntastic
             get => _displayText;
             protected set => _displayText = value;
         }
-        
-        public static T AllOptions => GetAllOptions<T>() where T : ScriptableEnum
 
         private static Dictionary<Type, ScriptableEnum[]> _allOptionsCache = new();
 
@@ -55,7 +53,7 @@ namespace Tauntastic
             };
         }
 
-        public static T[] GetAllOptions<T>() where T : ScriptableEnum
+        public static T[] GetAll<T>() where T : ScriptableEnum
         {
             if (_allOptionsCache.TryGetValue(typeof(T), out ScriptableEnum[] cachedOptions))
             {
@@ -92,6 +90,20 @@ namespace Tauntastic
             _allOptionsCache[type] = assets;
             return assets;
         }
+        
+        public static T GetByName<T>(string textIdentifier)  where T : ScriptableEnum
+        {
+            textIdentifier = textIdentifier.Trim().ToLower();
+            var allScriptableEnums = GetAll<T>();
+            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier).ToArray();
+
+            return matchingEnums.Length switch
+            {
+                0 => throw new Exception($"No scriptable enum found for {textIdentifier}"),
+                > 1 => throw new Exception($"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
+                _ => matchingEnums.FirstOrDefault()
+            };
+        }
 
         public static ScriptableEnum GetByName(Type type, string textIdentifier)
         {
@@ -110,33 +122,6 @@ namespace Tauntastic
         public static IEnumerable<ScriptableEnum> GetAllInstances(Type type)
         {
             return GetAllOptions(type);
-        }
-
-        // public override bool Equals(object obj)
-        // {
-        //     if (obj is not ScriptableEnum other) return false;
-        //     if (ReferenceEquals(this, other)) return true;
-        //     return GetType() == other.GetType();
-        // }
-
-        // public override int GetHashCode()
-        // {
-        //     return base.GetHashCode();
-        // }
-        //
-        // public static bool operator ==(ScriptableEnum left, ScriptableEnum right)
-        // {
-        //     return ReferenceEquals(left, right);
-        // }
-        //
-        // public static bool operator !=(ScriptableEnum left, ScriptableEnum right)
-        // {
-        //     return !(left == right);
-        // }
-
-        public static implicit operator ScriptableEnum(string name)
-        {
-            return GetByName(typeof(ScriptableEnum), name);
         }
     }
 
@@ -464,7 +449,7 @@ namespace Tauntastic
 namespace Tauntastic.ScriptableEnums
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class DisableAttribute : PropertyAttribute
+    public class ScriptableEnumsDisableAttribute : PropertyAttribute
     {
     }
 
@@ -474,8 +459,8 @@ namespace Tauntastic.ScriptableEnums
     }
 
 #if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(DisableAttribute), true)]
-    public class DisableAttributePropertyDrawer : PropertyDrawer
+    [CustomPropertyDrawer(typeof(ScriptableEnumsDisableAttribute), true)]
+    public class ScriptableEnumsDisableAttributePropertyDrawer : PropertyDrawer
     {
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
