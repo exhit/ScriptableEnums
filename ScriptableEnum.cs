@@ -10,7 +10,7 @@ using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 #endif
 
-namespace Tauntastic.ScriptableEnums
+namespace Tauntastic
 {
     [Icon("Packages/com.tauntastic.scriptableenums/d_ScriptableEnum Icon.png")]
     abstract public class ScriptableEnum : ScriptableObject

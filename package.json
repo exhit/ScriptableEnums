@@ -1,11 +1,11 @@
 {
   "name": "com.tauntastic.scriptableenums",
   "version": "1.0.0",
-  "displayName": "ScriptableEnums",
+  "displayName": "Taunting.ScriptableEnums",
   "description": "An utility that simplifies scriptable objects use",
-  "unity": "2020.3",
+  "unity": "2023.2",
   "author": {
-    "name": "Tauntastic",
+    "name": "Taunting",
     "email": "tauntastic.unitydeveloper@gmail.com"
   },
   "license": "MIT",
@@ -20,6 +20,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/exhit/com.tauntastic.scriptableenums.git"
-  },
-  "changelog": "### 1.0.0 (2025-03-22)\n- Initial release of ScriptableEnums."
+  }
 }
