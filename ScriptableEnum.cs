@@ -140,7 +140,9 @@ namespace Tauntastic
 
     public static class ScriptableEnumUtils
     {
-        public static VisualElement GetCorrespondingScriptableEnumElement(SerializedProperty property, FieldInfo fieldInfo, int countThreshold = 10)
+		private const int _PREDEFINED_COUNT = 25;
+
+        public static VisualElement GetCorrespondingScriptableEnumElement(SerializedProperty property, FieldInfo fieldInfo, int countThreshold = _PREDEFINED_COUNT)
         {
             if (property.isArray)
             {
@@ -155,7 +157,7 @@ namespace Tauntastic
             return new ScriptableEnumField(property, fieldInfo);
         }
         
-        public static bool IsExistingScriptableObjectCountAbove(this Type type, int threshold = 40)
+        public static bool IsExistingScriptableObjectCountAbove(this Type type, int threshold = _PREDEFINED_COUNT)
         {
             var assets = GetAssets(type);
             return assets.Count > threshold;
@@ -310,6 +312,7 @@ namespace Tauntastic
 
             _popupField.RegisterValueChangedCallback(evt => { OnSelectionChanged(_property, evt.newValue); });
 
+			Debug.Log(_property);
             bool exists = _property.objectReferenceValue != null;
 
             pingButton.clickable = new Clickable(() =>
