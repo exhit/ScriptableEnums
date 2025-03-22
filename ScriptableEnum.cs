@@ -299,19 +299,6 @@ namespace Tauntastic.ScriptableEnums
                 }
             };
             
-            // var selectButton = new Button()
-            // {
-            //     name = _SELECT_BUTTON_NAME,
-            //     text = "👆",
-            //     style =
-            //     {
-            //         // fontSize = 14,
-            //         paddingTop = 0,
-            //         paddingBottom = 0,
-            //         // unityTextAlign = TextAnchor.UpperCenter,
-            //     }
-            // };
-            
             var openPropertyEditorButton = new Button()
             {
                 name = _OPEN_PROPERTY_EDITOR_BUTTON_NAME,
@@ -361,7 +348,6 @@ namespace Tauntastic.ScriptableEnums
 
             _popupField = this.Q<PopupField<string>>(_POPUP_FIELD_NAME);
             var pingButton = this.Q<Button>(_PING_BUTTON_NAME);
-            // var selectButton = this.Q<Button>(_SELECT_BUTTON_NAME);
             var openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
 
             _popupField.TrackPropertyValue(_property, p =>
@@ -369,8 +355,6 @@ namespace Tauntastic.ScriptableEnums
                 bool exists = _property.objectReferenceValue != null;
                 pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 pingButton.SetEnabled(exists);
-                // selectButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
-                // selectButton.SetEnabled(exists);
                 openPropertyEditorButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 openPropertyEditorButton.SetEnabled(exists);
                 _popupField.SetValueWithoutNotify(GetCurrentDisplayName(p));
@@ -390,18 +374,6 @@ namespace Tauntastic.ScriptableEnums
 
             pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
             pingButton.SetEnabled(exists);
-            
-            // selectButton.clickable = new Clickable(() =>
-            // {
-            //     if (_property.objectReferenceValue != null)
-            //     {
-            //         Selection.activeObject = _property.objectReferenceValue;
-            //     }
-            // });
-            //
-            //
-            // selectButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
-            // selectButton.SetEnabled(exists);
 
             openPropertyEditorButton.clickable = new Clickable(() =>
             {
