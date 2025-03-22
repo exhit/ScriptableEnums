@@ -12,6 +12,8 @@ using UnityEngine.UIElements;
 
 namespace Tauntastic
 {
+    using ScriptableEnums;
+    
     [Icon("Packages/com.tauntastic.scriptableenums/d_ScriptableEnum Icon.png")]
     abstract public class ScriptableEnum : ScriptableObject
     {
@@ -457,7 +459,10 @@ namespace Tauntastic
         }
     }
 #endif
-    
+}
+
+namespace Tauntastic.ScriptableEnums
+{
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class DisableAttribute : PropertyAttribute
     {
