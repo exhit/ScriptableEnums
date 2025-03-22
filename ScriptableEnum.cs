@@ -18,12 +18,16 @@ namespace Tauntastic
         [SerializeField]
         [Disable]
         private string _displayText;
-        
+
         public string DisplayText
         {
             get => _displayText;
             protected set => _displayText = value;
         }
+        
+        public static T AllOptions => GetAllOptions<T>() where T : ScriptableEnum
+
+        private static Dictionary<Type, ScriptableEnum[]> _allOptionsCache = new();
 
         private void Awake()
         {
@@ -38,19 +42,24 @@ namespace Tauntastic
         public static implicit operator ScriptableEnum(string textIdentifier)
         {
             var allScriptableEnums = Resources.LoadAll<ScriptableEnum>("");
-            var allScriptableEnumsOfType =
-                allScriptableEnums.Where(x => x.DisplayText.Contains(textIdentifier)).ToArray();
-            return allScriptableEnumsOfType.Length switch
+            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Contains(textIdentifier)).ToArray();
+
+            return matchingEnums.Length switch
             {
                 0 => throw new Exception($"No scriptable enum found for {textIdentifier}"),
                 > 1 => throw new Exception(
                     $"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
-                _ => allScriptableEnumsOfType.FirstOrDefault()
+                _ => matchingEnums.FirstOrDefault()
             };
         }
 
         public static T[] GetAllOptions<T>() where T : ScriptableEnum
         {
+            if (_allOptionsCache.TryGetValue(typeof(T), out ScriptableEnum[] cachedOptions))
+            {
+                return cachedOptions.Cast<T>().ToArray();
+            }
+
             T[] assets;
 #if UNITY_EDITOR
             string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
@@ -59,113 +68,74 @@ namespace Tauntastic
 #else
             assets = Resources.LoadAll<T>("");
 #endif
+            _allOptionsCache[typeof(T)] = assets;
             return assets;
         }
 
         public static ScriptableEnum[] GetAllOptions(Type type)
         {
+            if (_allOptionsCache.TryGetValue(type, out ScriptableEnum[] cachedOptions))
+            {
+                return cachedOptions;
+            }
+
             ScriptableEnum[] assets;
 #if UNITY_EDITOR
             string[] guids = AssetDatabase.FindAssets("t:" + type.Name);
             string[] paths = guids.Select(AssetDatabase.GUIDToAssetPath).ToArray();
-            assets = paths.Select(path => AssetDatabase.LoadAssetAtPath(path, type)).Cast<ScriptableEnum>()
-                .ToArray();
+            assets = paths.Select(path => AssetDatabase.LoadAssetAtPath(path, type)).Cast<ScriptableEnum>().ToArray();
 #else
             assets = Resources.LoadAll("", type).Cast<ScriptableEnum>().ToArray();
 #endif
+            _allOptionsCache[type] = assets;
             return assets;
         }
-    }
 
-    abstract public class ScriptableEnum<T> : ScriptableEnum where T : ScriptableEnum<T>
-    {
-        private static T[] _allOptions;
-
-        public static T[] AllOptions
-        {
-            get
-            {
-                if (_allOptions == null)
-                {
-#if UNITY_EDITOR
-                    string[] guids = AssetDatabase.FindAssets("t:" + typeof(T).Name);
-                    string[] paths = guids.Select(AssetDatabase.GUIDToAssetPath).ToArray();
-                    _allOptions = paths.Select(AssetDatabase.LoadAssetAtPath<T>).ToArray();
-#else
-                    _allOptions = Resources.LoadAll<T>("");
-#endif
-                }
-
-                return _allOptions;
-            }
-        }
-
-        private bool Equals(T other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (GetType() != other.GetType()) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return false;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return Equals((T)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public static bool operator ==(T left, ScriptableEnum<T> right) => ReferenceEquals(left, right);
-
-        public static bool operator !=(T left, ScriptableEnum<T> right) => !(left == right);
-
-        public static implicit operator T(ScriptableEnum<T> scriptableEnum)
-        {
-            return scriptableEnum as T;
-        }
-
-        public static implicit operator ScriptableEnum<T>(string name)
-        {
-            var allScriptableEnums = GetAllInstances();
-            var allScriptableEnumsOfType = allScriptableEnums.Where(x => x.name.Contains(name)).ToArray();
-            return allScriptableEnumsOfType.Length switch
-            {
-                0 => throw new Exception($"No scriptable enum found for {name}"),
-                > 1 => throw new Exception(
-                    $"Multiple scriptable enums found for {name}, please specify a more specific name"),
-                _ => allScriptableEnumsOfType.FirstOrDefault()
-            };
-        }
-
-        public static T GetByName(string textIdentifier)
+        public static ScriptableEnum GetByName(Type type, string textIdentifier)
         {
             textIdentifier = textIdentifier.Trim().ToLower();
-            var allScriptableEnums = GetAllInstances();
-            var allScriptableEnumsOfType =
-                allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier).ToArray();
-            return allScriptableEnumsOfType.Length switch
+            var allScriptableEnums = GetAllOptions(type);
+            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier).ToArray();
+
+            return matchingEnums.Length switch
             {
                 0 => throw new Exception($"No scriptable enum found for {textIdentifier}"),
-                > 1 => throw new Exception(
-                    $"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
-                _ => allScriptableEnumsOfType.FirstOrDefault() as T
+                > 1 => throw new Exception($"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
+                _ => matchingEnums.FirstOrDefault()
             };
-        }
-        
-
-        public static IEnumerable<T> GetAllInstances()
-        {
-            return Resources.LoadAll<T>("");
         }
 
         public static IEnumerable<ScriptableEnum> GetAllInstances(Type type)
         {
-            return Resources.LoadAll<ScriptableEnum>(type.Name);
+            return GetAllOptions(type);
         }
 
+        // public override bool Equals(object obj)
+        // {
+        //     if (obj is not ScriptableEnum other) return false;
+        //     if (ReferenceEquals(this, other)) return true;
+        //     return GetType() == other.GetType();
+        // }
+
+        // public override int GetHashCode()
+        // {
+        //     return base.GetHashCode();
+        // }
+        //
+        // public static bool operator ==(ScriptableEnum left, ScriptableEnum right)
+        // {
+        //     return ReferenceEquals(left, right);
+        // }
+        //
+        // public static bool operator !=(ScriptableEnum left, ScriptableEnum right)
+        // {
+        //     return !(left == right);
+        // }
+
+        public static implicit operator ScriptableEnum(string name)
+        {
+            return GetByName(typeof(ScriptableEnum), name);
+        }
     }
 
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
