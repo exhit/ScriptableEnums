@@ -1,6 +1,6 @@
 {
   "name": "com.tauntastic.scriptableenums",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "displayName": "Taunting.ScriptableEnums",
   "description": "An utility that simplifies scriptable objects use",
   "unity": "2023.2",
