@@ -12,6 +12,8 @@ using UnityEngine.UIElements;
 
 namespace Tauntastic
 {
+    using ScriptableEnums;
+    
     [Icon("Packages/com.tauntastic.scriptableenums/d_ScriptableEnum Icon.png")]
     abstract public class ScriptableEnum : ScriptableObject
     {
@@ -484,43 +486,6 @@ namespace Tauntastic
             }
 
             property.serializedObject.ApplyModifiedProperties();
-        }
-    }
-#endif
-    
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-    public class DisableAttribute : PropertyAttribute
-    {
-    }
-
-    public interface IDisableable
-    {
-        void Disable();
-    }
-
-#if UNITY_EDITOR
-    [CustomPropertyDrawer(typeof(DisableAttribute), true)]
-    public class DisableAttributePropertyDrawer : PropertyDrawer
-    {
-        public override VisualElement CreatePropertyGUI(SerializedProperty property)
-        {
-            var propertyField = new PropertyField(property);
-
-            propertyField.RegisterCallbackOnce<GeometryChangedEvent>(_ =>
-                {
-                    var firstChild = propertyField.Q();
-                    if (firstChild is IDisableable disableable)
-                    {
-                        disableable.Disable();
-                    }
-                    else
-                    {
-                        propertyField.SetEnabled(false);
-                    }
-                }
-            );
-
-            return propertyField;
         }
     }
 #endif
