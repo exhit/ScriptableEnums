@@ -244,6 +244,8 @@ namespace Tauntastic
                 text = "💡",
                 style =
                 {
+                    minHeight = 18,
+                    maxHeight = 18,
                     paddingTop = 0,
                     paddingBottom = 0,
                 }
@@ -255,9 +257,13 @@ namespace Tauntastic
                 text = "👉",
                 style =
                 {
+                    minHeight = 18,
+                    maxHeight = 18,
                     marginLeft = 0,
                     paddingTop = 0,
                     paddingBottom = 4,
+                    paddingLeft = 4,
+                    paddingRight = 4,
                 }
             };
 
