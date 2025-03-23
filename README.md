@@ -6,7 +6,7 @@
 
 Install via the package manager git url using the latest version.
 ```
-git+https://github.com/exhit/Tauntastic.ScriptableEnums.git#1.0.1
+git+https://github.com/exhit/Tauntastic.ScriptableEnums.git
 ```
 
 ## Features
