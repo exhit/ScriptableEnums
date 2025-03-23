@@ -312,7 +312,6 @@ namespace Tauntastic
 
             _popupField.RegisterValueChangedCallback(evt => { OnSelectionChanged(_property, evt.newValue); });
 
-			Debug.Log(_property);
             bool exists = _property.objectReferenceValue != null;
 
             pingButton.clickable = new Clickable(() =>
