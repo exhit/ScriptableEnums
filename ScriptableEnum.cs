@@ -248,6 +248,8 @@ namespace Tauntastic
                     maxHeight = 18,
                     paddingTop = 0,
                     paddingBottom = 0,
+                    marginLeft = 1,
+                    marginRight = 1,
                 }
             };
             
@@ -259,7 +261,8 @@ namespace Tauntastic
                 {
                     minHeight = 18,
                     maxHeight = 18,
-                    marginLeft = 0,
+                    marginLeft = 1,
+                    marginRight = 1,
                     paddingTop = 0,
                     paddingBottom = 4,
                     paddingLeft = 4,
