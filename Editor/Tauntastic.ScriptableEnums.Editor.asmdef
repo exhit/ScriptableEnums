@@ -1,0 +1,18 @@
+{
+    "name": "Tauntastic.ScriptableEnums.Editor",
+    "rootNamespace": "Tauntastic.ScriptableEnums.Editor",
+    "references": [
+        "GUID:12c314bd2eb4f3e4884743c1c8c7c995"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
