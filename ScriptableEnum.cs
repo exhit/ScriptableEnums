@@ -223,7 +223,8 @@ namespace Tauntastic
             {
                 style =
                 {
-                    flexDirection = FlexDirection.Row
+                    flexDirection = FlexDirection.Row,
+                    maxHeight = 21
                 }
             };
 
@@ -247,7 +248,7 @@ namespace Tauntastic
                     paddingTop = 0,
                     paddingBottom = 0,
                     marginLeft = 1,
-                    marginRight = 1,
+                    marginRight = 0,
                 }
             };
             
@@ -258,7 +259,7 @@ namespace Tauntastic
                 style =
                 {
                     marginLeft = 1,
-                    marginRight = 1,
+                    marginRight = 0,
                     paddingTop = 0,
                     paddingBottom = 5,
                     paddingLeft = 4,
