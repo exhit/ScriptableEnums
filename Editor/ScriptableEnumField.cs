@@ -138,20 +138,18 @@ namespace Tauntastic.ScriptableEnums.Editor
 
             _popupField.TrackPropertyValue(property, p =>
             {
-                Debug.Log("TrackPropertyValue");
-                
                 var obj = p.objectReferenceValue;
                 bool exists = obj != null;
-                
                 pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 pingButton.SetEnabled(exists);
-                
                 openPropertyEditorButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 openPropertyEditorButton.SetEnabled(exists);
-                
-                var displayName = GetCurrentDisplayName(obj);
-                Debug.Log(displayName);
-                _popupField.SetValueWithoutNotify(displayName);
+                _popupField.SetValueWithoutNotify(GetCurrentDisplayName(obj));
+            });
+            
+            _popupField.TrackSerializedObjectValue(property.serializedObject, _ =>
+            {
+                _popupField.SetValueWithoutNotify(GetCurrentDisplayName(property.objectReferenceValue));
             });
 
             _popupField.RegisterValueChangedCallback(evt => { OnSelectionChanged(property, evt.newValue); });
