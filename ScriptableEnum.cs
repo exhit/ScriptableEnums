@@ -138,6 +138,16 @@ namespace Tauntastic
             SetByName(ref se, name);
         }
         
+        public static void IfNullOrWrongNameSetByName<T>(ref T se, string name) where T : ScriptableEnum
+        {
+            if (se != null && se.name == name)
+            {
+                return;
+            }
+            
+            SetByName(ref se, name);
+        }
+        
         #endregion
     }
 }
