@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace Tauntastic.ScriptableEnums.Editor
 {
@@ -113,11 +114,6 @@ namespace Tauntastic.ScriptableEnums.Editor
         {
             _property = property;
             _fieldInfo = fieldInfo;
-            
-            if (_property == null)
-            {
-                throw new ArgumentNullException(nameof(property) + ": cannot bind to null");
-            }
 
             if (_fieldInfo == null)
             {
@@ -140,9 +136,12 @@ namespace Tauntastic.ScriptableEnums.Editor
             var pingButton = this.Q<Button>(_PING_BUTTON_NAME);
             var openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
 
-            _popupField.TrackPropertyValue(_property, p =>
+            _popupField.TrackPropertyValue(property, p =>
             {
-                bool exists = p.objectReferenceValue != null;
+                Debug.Log("TrackPropertyValue");
+                
+                var obj = p.objectReferenceValue;
+                bool exists = obj != null;
                 
                 pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 pingButton.SetEnabled(exists);
@@ -150,22 +149,20 @@ namespace Tauntastic.ScriptableEnums.Editor
                 openPropertyEditorButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 openPropertyEditorButton.SetEnabled(exists);
                 
-                var displayName = GetCurrentDisplayName(p);
+                var displayName = GetCurrentDisplayName(obj);
                 Debug.Log(displayName);
                 _popupField.SetValueWithoutNotify(displayName);
-                
-                p.serializedObject.Update();
             });
 
-            _popupField.RegisterValueChangedCallback(evt => { OnSelectionChanged(_property, evt.newValue); });
+            _popupField.RegisterValueChangedCallback(evt => { OnSelectionChanged(property, evt.newValue); });
 
-            bool exists = _property.objectReferenceValue != null;
+            bool exists = property.objectReferenceValue != null;
 
             pingButton.clickable = new Clickable(() =>
             {
-                if (_property.objectReferenceValue != null)
+                if (property.objectReferenceValue != null)
                 {
-                    EditorGUIUtility.PingObject(_property.objectReferenceValue);
+                    EditorGUIUtility.PingObject(property.objectReferenceValue);
                 }
             });
 
@@ -174,7 +171,7 @@ namespace Tauntastic.ScriptableEnums.Editor
 
             openPropertyEditorButton.clickable = new Clickable(() =>
             {
-                EditorUtility.OpenPropertyEditor(_property.objectReferenceValue);
+                EditorUtility.OpenPropertyEditor(property.objectReferenceValue);
             });
             
             openPropertyEditorButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
@@ -222,7 +219,7 @@ namespace Tauntastic.ScriptableEnums.Editor
 
             _popupField.choices = choices;
             _popupField.SetEnabled(_popupField.choices.Count > 1);
-            _popupField.SetValueWithoutNotify(GetCurrentDisplayName(_property));
+            _popupField.SetValueWithoutNotify(GetCurrentDisplayName(_property.objectReferenceValue));
         }
 
         private List<ScriptableObject> GetAssetsOfType()
@@ -238,24 +235,23 @@ namespace Tauntastic.ScriptableEnums.Editor
             return assets;
         }
 
-        private string GetCurrentDisplayName(SerializedProperty property)
+        private string GetCurrentDisplayName(Object obj)
         {
-            var currentValue = property.objectReferenceValue as ScriptableObject;
-
-            if (currentValue == null)
+            var currentSO = obj as ScriptableObject;
+            
+            if (currentSO == null)
             {
                 return "<null>";
             }
 
-            if (_assetToNameMap.TryGetValue(currentValue, out string nameValue))
+            if (_assetToNameMap.TryGetValue(currentSO, out string nameValue))
             {
                 return nameValue;
             }
 
             var assets = GetAssetsOfType();
-            Debug.Log(assets.Count.ToString());
             var assetsToNameMap = assets.ToDictionary(x => x, y => y.name);
-            if (assetsToNameMap.TryGetValue(currentValue, out nameValue))
+            if (assetsToNameMap.TryGetValue(currentSO, out nameValue))
             {
                 return nameValue;
             }
@@ -273,7 +269,6 @@ namespace Tauntastic.ScriptableEnums.Editor
             else if (newValue == "<null>")
             {
                 property.objectReferenceValue = null;
-                // Debug.LogWarning("Are you sure you want to assign null?");
             }
             else
             {
