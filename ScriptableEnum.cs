@@ -9,11 +9,20 @@ using UnityEditor;
 
 namespace Tauntastic
 {
-    [Icon("Packages/com.tauntastic.scriptableenums/Images/d_ScriptableEnum Icon.png")]
+    using ScriptableEnums;
+    
+    [Icon(_PATH_PREFIX + "/com.tauntastic.scriptableenums/Images/d_ScriptableEnum Icon.png")]
     abstract public class ScriptableEnum : ScriptableObject
     {
+        private const string _PATH_PREFIX =
+#if TAUNTASTIC_DEBUG
+            "Assets/Tauntastic";
+#else
+            "Packages";
+#endif
+        
         [SerializeField]
-        [Tauntastic.ScriptableEnums.ScriptableEnumsDisableAttribute]
+        [ScriptableEnumsDisable]
         private string _displayText;
 
         public string DisplayText
@@ -22,7 +31,6 @@ namespace Tauntastic
             protected set => _displayText = value;
         }
 
-        private static readonly Dictionary<Type, ScriptableEnum[]> _allOptionsCache = new();
 
         private void Awake()
         {
@@ -33,6 +41,10 @@ namespace Tauntastic
         {
             DisplayText = name;
         }
+        
+        #region STATIC
+        
+        private static readonly Dictionary<Type, ScriptableEnum[]> _allOptionsCache = new();
 
         public static implicit operator ScriptableEnum(string textIdentifier)
         {
@@ -109,5 +121,23 @@ namespace Tauntastic
         {
             return GetAllOptions(type);
         }
+        
+        public static void SetByName<T>(ref T se, string name) where T : ScriptableEnum
+        {
+            var getByName = GetByName(typeof(T), name);
+            se = getByName as T;
+        }
+
+        public static void IfNullSetByName<T>(ref T se, string name) where T : ScriptableEnum
+        {
+            if (se != null)
+            {
+                return;
+            }
+            
+            SetByName(ref se, name);
+        }
+        
+        #endregion
     }
 }

@@ -35,6 +35,7 @@ namespace Tauntastic.ScriptableEnums.Editor
         public ScriptableEnumField(string label = nameof(ScriptableEnumField))
             : base(label, CreateVisualInputElement())
         {
+            
             AddToClassList("unity-base-field__aligned");
 
             RegisterCallback<AttachToPanelEvent>(_ =>
