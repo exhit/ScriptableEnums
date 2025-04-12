@@ -61,7 +61,7 @@ namespace Tauntastic.ScriptableEnums.Editor
             if (obj is Component component)
                 print += $" in scene {component.gameObject.scene.name.Color(Color.cyan)}";
 
-            Debug.Log($"{type.Name.Color(Color.red)} was set in: {print}");
+            Debug.LogWarning($"{type.Name.Color(Color.red)} was set in: {print}");
             return true;
         }
     }
