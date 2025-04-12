@@ -1,4 +1,4 @@
-namespace Tauntastic.ScriptableEnums.Editor
+namespace Tauntastic.ScriptableEnums
 {
     public static class StringUtils
     {
