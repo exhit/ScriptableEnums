@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -10,7 +11,7 @@ using UnityEditor;
 namespace Tauntastic
 {
     using ScriptableEnums;
-    
+
     [Icon(_PATH_PREFIX + "/com.tauntastic.scriptableenums/Images/d_ScriptableEnum Icon.png")]
     abstract public class ScriptableEnum : ScriptableObject
     {
@@ -20,7 +21,7 @@ namespace Tauntastic
 #else
             "Packages";
 #endif
-        
+
         [SerializeField]
         [ScriptableEnumsDisable]
         private string _displayText;
@@ -41,9 +42,9 @@ namespace Tauntastic
         {
             DisplayText = name;
         }
-        
+
         #region STATIC
-        
+
         private static readonly Dictionary<Type, ScriptableEnum[]> _allOptionsCache = new();
 
         public static implicit operator ScriptableEnum(string textIdentifier)
@@ -97,8 +98,8 @@ namespace Tauntastic
             _allOptionsCache[type] = assets;
             return assets;
         }
-        
-        public static T GetByName<T>(string textIdentifier)  where T : ScriptableEnum
+
+        public static T GetByName<T>(string textIdentifier) where T : ScriptableEnum
         {
             return GetByName(typeof(T), textIdentifier) as T;
         }
@@ -107,12 +108,14 @@ namespace Tauntastic
         {
             textIdentifier = textIdentifier.Trim().ToLower();
             var allScriptableEnums = GetAllOptions(type);
-            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier).ToArray();
+            var matchingEnums = allScriptableEnums.Where(x => x.DisplayText.Trim().ToLower() == textIdentifier)
+                .ToArray();
 
             return matchingEnums.Length switch
             {
                 0 => throw new Exception($"No scriptable enum found for {textIdentifier}"),
-                > 1 => throw new Exception($"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
+                > 1 => throw new Exception(
+                    $"Multiple scriptable enums found for {textIdentifier}, please specify a more specific name"),
                 _ => matchingEnums.FirstOrDefault()
             };
         }
@@ -121,33 +124,27 @@ namespace Tauntastic
         {
             return GetAllOptions(type);
         }
-        
+
         public static void SetByName<T>(ref T se, string name) where T : ScriptableEnum
         {
             var getByName = GetByName(typeof(T), name);
             se = getByName as T;
         }
 
-        public static void IfNullSetByName<T>(ref T se, string name) where T : ScriptableEnum
+        public static bool TrySetIfNullOrWrongName<T>(ref T se, string name) where T : ScriptableEnum
         {
-            if (se != null)
-            {
-                return;
-            }
-            
+            if (se != null && se.name == name) return false;
             SetByName(ref se, name);
+            return se != null;
         }
-        
-        public static void IfNullOrWrongNameSetByName<T>(ref T se, string name) where T : ScriptableEnum
+
+        public static bool TrySetIfNullOrWrongName<T>(ref T se) where T : ScriptableEnum
         {
-            if (se != null && se.name == name)
-            {
-                return;
-            }
-            
-            SetByName(ref se, name);
+            if (se != null) return false;
+            se = ScriptableEnum.GetAll<T>().FirstOrDefault();
+            return se != null;
         }
-        
+
         #endregion
     }
 }
