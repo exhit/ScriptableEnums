@@ -143,6 +143,26 @@ namespace Tauntastic
             se = ScriptableEnum.GetAll<T>().FirstOrDefault();
             return se != null;
         }
+        
+        public static bool TrySetIfNullOrWrongName<T>(ICollection<T> collection, string name) where T : ScriptableEnum
+        {
+            if (collection.Any(x => x.name == name)) return false;
+            T se = null;
+            SetByName(ref se, name);
+            if (se == null) return false;
+            collection.Add(se);
+            return true;
+        }
+
+        public static bool TrySetIfNullOrWrongName<T>(Dictionary<string, T> dictionary, string name) where T : ScriptableEnum
+        {
+            if (dictionary == null || dictionary.TryGetValue(name, out T se)) return false;
+            SetByName(ref se, name);
+            if (se == null) return false;
+            if (dictionary.TryAdd(name, se)) return true;
+            dictionary[name] = se;
+            return true;
+        }
 
         #endregion
     }
