@@ -133,10 +133,7 @@ namespace Tauntastic.ScriptableEnums.Editor
             if (_property.IsPropertyInUnityObject())
                 _popupField.AddToClassList("unity-base-field__aligned");
             else
-            {
-                Debug.Log(property.name);
-                _popupField.style.minWidth = 0;
-            }
+                _popupField.labelElement.style.minWidth = 0;
 
             _popupField.TrackPropertyValue(property, p =>
             {
