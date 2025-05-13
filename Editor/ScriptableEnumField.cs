@@ -10,11 +10,10 @@ using Object = UnityEngine.Object;
 
 namespace Tauntastic.ScriptableEnums.Editor
 {
-    public class ScriptableEnumField : BaseField<ScriptableObject>
+    public class ScriptableEnumField : VisualElement
     {
         private const string _POPUP_FIELD_NAME = "enum-field";
         private const string _PING_BUTTON_NAME = "ping-button";
-        // private const string _SELECT_BUTTON_NAME = "select-button";
         private const string _OPEN_PROPERTY_EDITOR_BUTTON_NAME  = "open-property-editor-button";
 
         private FieldInfo _fieldInfo;
@@ -34,8 +33,8 @@ namespace Tauntastic.ScriptableEnums.Editor
         }
 
         public ScriptableEnumField(string label = nameof(ScriptableEnumField))
-            : base(label, CreateVisualInputElement())
         {
+            Add(CreateVisualInputElement(label));
             
             AddToClassList("unity-base-field__aligned");
 
@@ -52,9 +51,9 @@ namespace Tauntastic.ScriptableEnums.Editor
             });
         }
 
-        private static VisualElement CreateVisualInputElement()
+        private static VisualElement CreateVisualInputElement(string label = "")
         {
-            var root = new VisualElement()
+            VisualElement root = new()
             {
                 style =
                 {
@@ -63,7 +62,7 @@ namespace Tauntastic.ScriptableEnums.Editor
                 }
             };
 
-            var popupField = new PopupField<string>("")
+            PopupField<string> popupField = new(label)
             {
                 name = _POPUP_FIELD_NAME,
                 style =
@@ -74,7 +73,7 @@ namespace Tauntastic.ScriptableEnums.Editor
                 }
             };
 
-            var pingButton = new Button()
+            Button pingButton = new()
             {
                 name = _PING_BUTTON_NAME,
                 text = "💡",
@@ -87,7 +86,7 @@ namespace Tauntastic.ScriptableEnums.Editor
                 }
             };
             
-            var openPropertyEditorButton = new Button()
+            Button openPropertyEditorButton = new()
             {
                 name = _OPEN_PROPERTY_EDITOR_BUTTON_NAME,
                 text = "👉",
@@ -104,7 +103,6 @@ namespace Tauntastic.ScriptableEnums.Editor
 
             root.Add(popupField);
             root.Add(pingButton);
-            // root.Add(selectButton);
             root.Add(openPropertyEditorButton);
             
             return root;
@@ -116,29 +114,23 @@ namespace Tauntastic.ScriptableEnums.Editor
             _fieldInfo = fieldInfo;
 
             if (_fieldInfo == null)
-            {
                 throw new ArgumentException("Cannot find field info for property: " + property.propertyPath);
-            }
 
             _targetType = _fieldInfo.FieldType;
 
             if (_targetType == null)
-            {
                 throw new ArgumentException("ScriptableEnumField can only be used with ScriptableObject properties.");
-            }
             
             if (_targetType.IsGenericType)
-            {
                 _targetType = _targetType.GetGenericArguments()[0];
-            }
 
             _popupField = this.Q<PopupField<string>>(_POPUP_FIELD_NAME);
-            var pingButton = this.Q<Button>(_PING_BUTTON_NAME);
-            var openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
+            Button pingButton = this.Q<Button>(_PING_BUTTON_NAME);
+            Button openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
 
             _popupField.TrackPropertyValue(property, p =>
             {
-                var obj = p.objectReferenceValue;
+                Object obj = p.objectReferenceValue;
                 bool exists = obj != null;
                 pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
                 pingButton.SetEnabled(exists);
@@ -159,9 +151,7 @@ namespace Tauntastic.ScriptableEnums.Editor
             pingButton.clickable = new Clickable(() =>
             {
                 if (property.objectReferenceValue != null)
-                {
                     EditorGUIUtility.PingObject(property.objectReferenceValue);
-                }
             });
 
             pingButton.style.display = exists ? DisplayStyle.Flex : DisplayStyle.None;
@@ -188,25 +178,20 @@ namespace Tauntastic.ScriptableEnums.Editor
             Dictionary<string, int> names = new();
 
             // Build asset lists with duplicate tracking
-            foreach (var asset in assets)
+            foreach (ScriptableObject asset in assets)
             {
                 string displayName = asset.name;
-
                 if (!names.TryAdd(displayName, 1))
-                {
                     names[displayName]++;
-                }
             }
 
             // Assign unique names and track assets
-            foreach (var asset in assets)
+            foreach (ScriptableObject asset in assets)
             {
                 string displayName = asset.name;
 
                 if (names[displayName] > 1)
-                {
                     displayName += $" ({names[displayName]})";
-                }
 
                 _nameToAssetMap[displayName] = asset;
                 _assetToNameMap[asset] = displayName;
@@ -235,24 +220,18 @@ namespace Tauntastic.ScriptableEnums.Editor
 
         private string GetCurrentDisplayName(Object obj)
         {
-            var currentSO = obj as ScriptableObject;
+            ScriptableObject currentSO = obj as ScriptableObject;
             
             if (currentSO == null)
-            {
                 return "<null>";
-            }
 
             if (_assetToNameMap.TryGetValue(currentSO, out string nameValue))
-            {
                 return nameValue;
-            }
 
             var assets = GetAssetsOfType();
             var assetsToNameMap = assets.ToDictionary(x => x, y => y.name);
             if (assetsToNameMap.TryGetValue(currentSO, out nameValue))
-            {
                 return nameValue;
-            }
 
             Debug.Log("Value was deleted or not found in the map.");
             return "<null>";
@@ -261,17 +240,11 @@ namespace Tauntastic.ScriptableEnums.Editor
         private void OnSelectionChanged(SerializedProperty property, string newValue)
         {
             if (_nameToAssetMap.TryGetValue(newValue, out ScriptableObject asset))
-            {
                 property.objectReferenceValue = asset;
-            }
             else if (newValue == "<null>")
-            {
                 property.objectReferenceValue = null;
-            }
             else
-            {
                 Debug.LogError("Error in selection change.");
-            }
 
             property.serializedObject.ApplyModifiedProperties();
         }
