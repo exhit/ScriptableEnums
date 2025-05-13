@@ -129,9 +129,11 @@ namespace Tauntastic.ScriptableEnums.Editor
             _popupField = this.Q<PopupField<string>>(_POPUP_FIELD_NAME);
             Button pingButton = this.Q<Button>(_PING_BUTTON_NAME);
             Button openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
-            
+
             if (_property.IsPropertyInUnityObject())
                 _popupField.AddToClassList("unity-base-field__aligned");
+            else
+                _popupField.style.minWidth = 0;
 
             _popupField.TrackPropertyValue(property, p =>
             {
