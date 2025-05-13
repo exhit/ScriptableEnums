@@ -10,7 +10,7 @@ using Object = UnityEngine.Object;
 
 namespace Tauntastic.ScriptableEnums.Editor
 {
-    public class ScriptableEnumField : VisualElement
+    public class ScriptableEnumField : BaseField<string>
     {
         private const string _POPUP_FIELD_NAME = "enum-field";
         private const string _PING_BUTTON_NAME = "ping-button";
@@ -32,12 +32,8 @@ namespace Tauntastic.ScriptableEnums.Editor
             BindPropertyAndFieldInfo(property, fieldInfo);
         }
 
-        public ScriptableEnumField(string label = nameof(ScriptableEnumField))
+        public ScriptableEnumField(string label = nameof(ScriptableEnumField)) : base(label, CreateVisualInputElement())
         {
-            Add(CreateVisualInputElement(label));
-            
-            AddToClassList("unity-base-field__aligned");
-
             RegisterCallback<AttachToPanelEvent>(_ =>
             {
                 Undo.undoRedoPerformed += RefreshOptions;
@@ -51,7 +47,7 @@ namespace Tauntastic.ScriptableEnums.Editor
             });
         }
 
-        private static VisualElement CreateVisualInputElement(string label = "")
+        private static VisualElement CreateVisualInputElement()
         {
             VisualElement root = new()
             {
@@ -62,7 +58,7 @@ namespace Tauntastic.ScriptableEnums.Editor
                 }
             };
 
-            PopupField<string> popupField = new(label)
+            PopupField<string> popupField = new("")
             {
                 name = _POPUP_FIELD_NAME,
                 style =
@@ -71,9 +67,6 @@ namespace Tauntastic.ScriptableEnums.Editor
                     marginRight = 0,
                 }
             };
-            
-            if (string.IsNullOrEmpty(label))
-                popupField.style.marginLeft = 0;
 
             Button pingButton = new()
             {
@@ -131,9 +124,15 @@ namespace Tauntastic.ScriptableEnums.Editor
             Button openPropertyEditorButton = this.Q<Button>(_OPEN_PROPERTY_EDITOR_BUTTON_NAME);
 
             if (_property.IsPropertyInUnityObject())
-                _popupField.AddToClassList("unity-base-field__aligned");
+                AddToClassList("unity-base-field__aligned");
             else
-                _popupField.labelElement.style.minWidth = 0;
+                labelElement.style.minWidth = 0;
+            
+            RegisterCallbackOnce<GeometryChangedEvent>(_ =>
+            {
+                if (string.IsNullOrEmpty(label))
+                    _popupField.style.marginLeft = 0;
+            });
 
             _popupField.TrackPropertyValue(property, p =>
             {
