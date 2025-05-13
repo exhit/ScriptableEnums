@@ -68,10 +68,13 @@ namespace Tauntastic.ScriptableEnums.Editor
                 style =
                 {
                     flexGrow = 1f,
-                    marginLeft = 0,
                     marginRight = 0,
                 }
             };
+            
+            if (string.IsNullOrEmpty(label))
+                popupField.style.marginLeft = 0;
+            
 
             Button pingButton = new()
             {
