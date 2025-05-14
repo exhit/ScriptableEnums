@@ -15,7 +15,7 @@ namespace Tauntastic
     abstract public class ScriptableEnum : ScriptableObject
     {
         private const string _PATH_PREFIX =
-#if TAUNTASTIC_DEBUG
+#if TAUNTASTIC_ASSETS_PACKAGE
             "Assets/Tauntastic";
 #else
             "Packages";
