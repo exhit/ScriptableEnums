@@ -64,6 +64,7 @@ namespace Tauntastic.ScriptableEnums.Editor
                 style =
                 {
                     flexGrow = 1f,
+                    marginLeft = 0,
                     marginRight = 0,
                 }
             };
