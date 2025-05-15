@@ -32,7 +32,7 @@ namespace Tauntastic
         }
 
 
-        private void Awake()
+        protected virtual void Awake()
         {
             DisplayText = name;
         }
